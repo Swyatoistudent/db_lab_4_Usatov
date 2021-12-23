@@ -1,4 +1,4 @@
-INSERT INTO Engine_Type (engine_id, engine_type,engine_size)
+INSERT INTO Engine (engine_id, engine_type,engine_size)
 VALUES(1, 'Diesel', 3.0),(2, 'Petrol',4.4),(3, 'Petrol',1.0),(4,'Petrol',4.0);
 
 INSERT INTO Cars(car_id,make, model, mileage, engine_id)

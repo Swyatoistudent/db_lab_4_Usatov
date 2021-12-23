@@ -4,23 +4,28 @@ import pandas as pd
 
 config = psycopg2.connect(database="Usatov_Lab2", user="Usatov", password="123", host="localhost", port="5432")
 
-querry_selector_1 = """SELECT ROUND(AVG(mileage), 2) as avg_miles, make 
+querry_selector_1 = """ create view MilesByMake as
+SELECT ROUND(AVG(mileage), 2) as avg_miles, make 
 FROM Cars
 GROUP BY make
 ORDER BY avg_miles"""
 
-querry_selector_2 = """SELECT COUNT(engine_id) as amount, engine
+querry_selector_2 = """create view CarsByEngine as
+SELECT COUNT(engine_id) as amount, engine
 FROM Cars INNER JOIN Engine USING(engine_id)
 GROUP BY engine
 ORDER BY amount"""
 
-querry_selector_3 = """SELECT AVG(price) as amount, make 
+querry_selector_3 = """create view PriceByMake as
+SELECT AVG(price) as amount, make 
 FROM Lot INNER JOIN Cars USING(car_id)
 GROUP BY make"""
 
 with config:
     cur = config.cursor()
+    cur.execute('DROP VIEW IF EXISTS MilesByMake')
     cur.execute(querry_selector_1)
+    cur.execute('SELECT * FROM MilesByMake')
 
     column_x = []
     column_y = []
@@ -40,7 +45,9 @@ with config:
     pd_df_1 = pd.DataFrame(columns=['avg_miles', 'make'], data=pd_data_1, index=range(1,len(pd_data_1)+1))
     plt.show()
 
+    cur.execute('DROP VIEW IF EXISTS CarsByEngine')
     cur.execute(querry_selector_2)
+    cur.execute('SELECT * FROM CarsByEngine')
 
     pie_names = []
     pie_temp_values = []
@@ -62,7 +69,9 @@ with config:
     pd_df_2 = pd.DataFrame(columns=['amount', 'engine'], data=pd_data_2, index=range(1,len(pd_data_2)+1))
     plt.show()
 
+    cur.execute('DROP VIEW IF EXISTS PriceByMake')
     cur.execute(querry_selector_3)
+    cur.execute('SELECT * FROM PriceByMake')
 
     column_x = []
     column_y = []
